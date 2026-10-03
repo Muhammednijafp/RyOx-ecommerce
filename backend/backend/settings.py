@@ -19,8 +19,7 @@ SECRET_KEY = os.environ.get(
 
 DEBUG = os.environ.get('DEBUG', 'True').lower() in ('true', '1', 'yes')
 
-env_hosts = [h.strip() for h in os.environ.get('ALLOWED_HOSTS', '').split(',') if h.strip()]
-ALLOWED_HOSTS = list(set(['localhost', '127.0.0.1', 'testserver', '*'] + env_hosts))
+ALLOWED_HOSTS = ['*']  # Allows localhost, 127.0.0.1, and all Render domains seamlessly
 
 FRONTEND_URL = os.environ.get('FRONTEND_URL', 'http://localhost:5173')
 
@@ -121,13 +120,7 @@ SIMPLE_JWT = {
 }
 
 # CORS Configuration
-env_cors = [o.strip() for o in os.environ.get('CORS_ALLOWED_ORIGINS', '').split(',') if o.strip()]
-CORS_ALLOWED_ORIGINS = list(set([
-    'http://localhost:5173',
-    'http://127.0.0.1:5173',
-    'http://localhost:3000',
-    'http://127.0.0.1:3000',
-] + env_cors))
+CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
 
 # Static & Media Files
