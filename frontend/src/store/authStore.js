@@ -10,7 +10,8 @@ const useAuthStore = create((set, get) => ({
   login: async (email, password) => {
     set({ loading: true })
     try {
-      const res = await loginUser({ email, password })
+      const cleanEmail = (email || '').trim().toLowerCase()
+      const res = await loginUser({ email: cleanEmail, password })
       localStorage.setItem('access_token',  res.data.access)
       localStorage.setItem('refresh_token', res.data.refresh)
       const profile = await getProfile()
@@ -18,7 +19,11 @@ const useAuthStore = create((set, get) => ({
       return { success: true }
     } catch (err) {
       set({ loading: false })
-      return { success: false, error: err.response?.data?.detail || 'Login failed' }
+      const detail = err.response?.data?.detail
+      const errorMsg = detail === 'No active account found with the given credentials'
+        ? 'Invalid email or password. Please check your credentials or register.'
+        : detail || err.response?.data?.non_field_errors?.[0] || 'Login failed. Please check your credentials.'
+      return { success: false, error: errorMsg }
     }
   },
 
