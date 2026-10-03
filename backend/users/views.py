@@ -2,10 +2,15 @@ from rest_framework import generics, permissions
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.views import TokenObtainPairView
 from django.core.mail import send_mail
 from django.conf import settings
 from .models import CustomUser, Address, PasswordResetToken
-from .serializers import RegisterSerializer, UserSerializer, AddressSerializer
+from .serializers import RegisterSerializer, UserSerializer, AddressSerializer, MyTokenObtainPairSerializer
+
+
+class MyTokenObtainPairView(TokenObtainPairView):
+    serializer_class = MyTokenObtainPairSerializer
 
 
 class RegisterView(generics.CreateAPIView):

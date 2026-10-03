@@ -1,6 +1,39 @@
 import re
 from rest_framework import serializers
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from .models import CustomUser, Address
+
+
+class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+    username_field = 'email'
+
+    def validate(self, attrs):
+        raw_email = attrs.get('email') or attrs.get('username') or ''
+        email = raw_email.strip().lower()
+        password = attrs.get('password') or ''
+
+        if not email:
+            raise serializers.ValidationError({'detail': 'Email address is required.'})
+        if not password:
+            raise serializers.ValidationError({'detail': 'Password is required.'})
+
+        user_obj = CustomUser.objects.filter(email__iexact=email).first()
+        if not user_obj:
+            raise serializers.ValidationError({'detail': f'No account found with email {email}. Please register.'})
+
+        if not user_obj.check_password(password):
+            raise serializers.ValidationError({'detail': 'Incorrect password. Please try again or reset your password.'})
+
+        if not user_obj.is_active:
+            raise serializers.ValidationError({'detail': 'This account has been deactivated.'})
+
+        refresh = self.get_token(user_obj)
+        data = {
+            'refresh': str(refresh),
+            'access': str(refresh.access_token),
+            'user': UserSerializer(user_obj).data
+        }
+        return data
 
 
 class RegisterSerializer(serializers.ModelSerializer):
