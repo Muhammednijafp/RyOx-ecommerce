@@ -1,0 +1,81 @@
+/* =========================
+   RYOX PHONE INPUT (LIGHT LUXURY)
+========================= */
+
+.ryox-phone-input {
+  width: 100%;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  background-color: #ffffff;
+  border: 1px solid var(--ryox-divider);
+  border-radius: 8px;
+  box-sizing: border-box;
+  overflow: hidden;
+  box-shadow: var(--ryox-shadow-sm);
+  transition: border-color 0.25s ease;
+}
+
+/* Country section */
+.ryox-phone-input .PhoneInputCountry {
+  height: 100%;
+  margin: 0;
+  padding: 0 10px;
+  display: flex;
+  align-items: center;
+  background-color: var(--ryox-surface-subtle);
+  border-right: 1px solid var(--ryox-divider);
+}
+
+/* Country dropdown */
+.ryox-phone-input .PhoneInputCountrySelect {
+  color: var(--ryox-text-heading);
+  background-color: #ffffff;
+  border: none;
+  outline: none;
+  cursor: pointer;
+}
+
+/* Country arrow */
+.ryox-phone-input .PhoneInputCountrySelectArrow {
+  color: var(--ryox-text-muted);
+  margin-left: 5px;
+}
+
+/* Flag */
+.ryox-phone-input .PhoneInputCountryIcon {
+  width: 24px;
+  height: 18px;
+}
+
+/* Phone number input */
+.ryox-phone-input .PhoneInputInput {
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  padding: 0.8rem 1rem;
+  background-color: #ffffff;
+  border: none;
+  outline: none;
+  color: var(--ryox-text-heading);
+  font-size: 0.95rem;
+  box-sizing: border-box;
+}
+
+/* Placeholder */
+.ryox-phone-input .PhoneInputInput::placeholder {
+  color: var(--ryox-text-subtle);
+}
+
+/* Focus */
+.ryox-phone-input:focus-within {
+  border-color: var(--ryox-gold);
+  outline: none;
+  box-shadow: 0 0 0 3px var(--ryox-gold-glow);
+}
+
+/* Country dropdown menu */
+.ryox-phone-input .PhoneInputCountrySelect option {
+  background-color: #ffffff;
+  color: var(--ryox-text-heading);
+}

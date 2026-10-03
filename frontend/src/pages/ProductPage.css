@@ -1,0 +1,766 @@
+/* ProductPage.css - Premium Luxury Light Perfume Theme */
+
+.ryox-product-page {
+  background-color: var(--ryox-bg);
+  background-image: 
+    radial-gradient(circle at 50% 0%, rgba(191, 161, 95, 0.08), transparent 40%),
+    radial-gradient(circle at 0% 100%, rgba(191, 161, 95, 0.04), transparent 30%);
+  min-height: 100vh;
+  color: var(--ryox-text);
+  padding-bottom: 5rem;
+}
+
+.ryox-container {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+/* Breadcrumb */
+.ryox-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 1.8rem 0;
+  font-size: 0.85rem;
+  color: var(--ryox-text-muted);
+}
+
+.ryox-bread-link {
+  color: var(--ryox-text-muted);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  transition: color 0.3s ease;
+}
+
+.ryox-bread-link:hover {
+  color: var(--ryox-gold-dark);
+}
+
+.ryox-bread-sep {
+  color: rgba(0, 0, 0, 0.15);
+}
+
+.ryox-bread-current {
+  color: var(--ryox-text-heading);
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 300px;
+}
+
+/* Main Grid Layout */
+.ryox-product-main {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 4.5rem;
+  align-items: start;
+  margin-bottom: 5rem;
+}
+
+@media (max-width: 992px) {
+  .ryox-product-main {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+}
+
+/* Image Section */
+.ryox-gallery-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  position: sticky;
+  top: 95px;
+}
+
+.ryox-main-img-container {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4/5;
+  background: radial-gradient(circle at center, #ffffff 0%, #f7f3eb 60%, #ece5d6 100%);
+  border: 1px solid var(--ryox-divider);
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: var(--ryox-shadow-md);
+}
+
+.ryox-main-img-wrap {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  cursor: zoom-in;
+  position: relative;
+}
+
+.ryox-main-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  transform-origin: center center;
+}
+
+.ryox-main-img-container:hover .ryox-main-img {
+  transform: scale(1.15);
+}
+
+.ryox-img-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  color: var(--ryox-text-muted);
+}
+
+.ryox-img-placeholder-icon {
+  font-size: 4.5rem;
+  filter: drop-shadow(0 4px 12px rgba(191, 161, 95, 0.25));
+}
+
+/* Thumbnails */
+.ryox-thumbnails-strip {
+  display: flex;
+  gap: 0.9rem;
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+  scrollbar-width: thin;
+  scrollbar-color: var(--ryox-gold-border) transparent;
+}
+
+.ryox-thumb-btn {
+  width: 80px;
+  height: 96px;
+  flex-shrink: 0;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #ffffff;
+  border: 1px solid var(--ryox-divider);
+  padding: 0;
+  cursor: pointer;
+  box-shadow: var(--ryox-shadow-sm);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+}
+
+.ryox-thumb-btn:hover {
+  border-color: var(--ryox-gold);
+  transform: translateY(-2px);
+}
+
+.ryox-thumb-btn.active {
+  border-color: var(--ryox-gold-dark);
+  box-shadow: 0 0 15px rgba(191, 161, 95, 0.3);
+}
+
+.ryox-thumb-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Product Info Section */
+.ryox-info-section {
+  display: flex;
+  flex-direction: column;
+}
+
+.ryox-brand-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.8rem;
+}
+
+.ryox-brand-name {
+  font-size: 0.82rem;
+  letter-spacing: 3.5px;
+  text-transform: uppercase;
+  color: var(--ryox-gold-dark);
+  font-weight: 700;
+}
+
+/* Stock Status Badges */
+.ryox-stock-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.35rem 0.85rem;
+  border-radius: 20px;
+  letter-spacing: 0.5px;
+}
+
+.ryox-stock-in {
+  background: rgba(46, 125, 50, 0.1);
+  color: #2e7d32;
+  border: 1px solid rgba(46, 125, 50, 0.25);
+}
+
+.ryox-stock-low {
+  background: rgba(239, 108, 0, 0.1);
+  color: #ef6c00;
+  border: 1px solid rgba(239, 108, 0, 0.25);
+}
+
+.ryox-stock-out {
+  background: rgba(198, 40, 40, 0.1);
+  color: #c62828;
+  border: 1px solid rgba(198, 40, 40, 0.25);
+}
+
+.ryox-product-title {
+  font-size: clamp(2.2rem, 3.5vw, 3rem);
+  font-weight: 500;
+  font-family: var(--ryox-font-serif);
+  color: var(--ryox-text-heading);
+  line-height: 1.2;
+  margin-bottom: 1.2rem;
+  letter-spacing: -0.5px;
+}
+
+/* Rating Summary */
+.ryox-rating-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.6rem;
+}
+
+.ryox-stars-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.ryox-rating-num {
+  font-weight: 700;
+  color: var(--ryox-gold-dark);
+  font-size: 0.98rem;
+}
+
+.ryox-reviews-count {
+  font-size: 0.88rem;
+  color: var(--ryox-text-muted);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* Badges Bar */
+.ryox-badges-bar {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.6rem;
+}
+
+.ryox-badge-item {
+  background: #ffffff;
+  border: 1px solid var(--ryox-gold-border);
+  color: var(--ryox-gold-dark);
+  font-size: 0.74rem;
+  font-weight: 700;
+  padding: 0.35rem 0.9rem;
+  border-radius: 20px;
+  letter-spacing: 0.5px;
+  box-shadow: var(--ryox-shadow-sm);
+}
+
+/* Price Box */
+.ryox-price-container {
+  display: flex;
+  align-items: baseline;
+  gap: 1.4rem;
+  padding: 1.4rem 1.6rem;
+  background: #ffffff;
+  border: 1px solid var(--ryox-divider);
+  border-radius: 14px;
+  margin-bottom: 2rem;
+  box-shadow: var(--ryox-shadow-sm);
+}
+
+.ryox-price-current {
+  font-size: 2.3rem;
+  font-weight: 700;
+  color: var(--ryox-text-heading);
+  letter-spacing: -0.5px;
+}
+
+.ryox-price-mrp {
+  font-size: 1.25rem;
+  color: var(--ryox-text-muted);
+  text-decoration: line-through;
+}
+
+.ryox-discount-pill {
+  background: rgba(46, 125, 50, 0.12);
+  color: #2e7d32;
+  border: 1px solid rgba(46, 125, 50, 0.25);
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 0.3rem 0.75rem;
+  border-radius: 6px;
+}
+
+/* Variant / Size Selector */
+.ryox-section-label {
+  font-size: 0.78rem;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+  color: var(--ryox-text-muted);
+  margin-bottom: 0.85rem;
+  font-weight: 700;
+}
+
+.ryox-size-options {
+  display: flex;
+  gap: 0.9rem;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+}
+
+.ryox-size-btn {
+  background: #ffffff;
+  border: 1px solid var(--ryox-divider);
+  color: var(--ryox-text);
+  padding: 0.75rem 1.5rem;
+  border-radius: 10px;
+  font-size: 0.92rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: var(--ryox-shadow-sm);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.ryox-size-btn:hover:not(:disabled) {
+  border-color: var(--ryox-gold);
+  transform: translateY(-2px);
+}
+
+.ryox-size-btn.active {
+  background: var(--ryox-surface-subtle);
+  border-color: var(--ryox-gold-dark);
+  color: var(--ryox-gold-dark);
+  box-shadow: 0 0 16px rgba(191, 161, 95, 0.2);
+}
+
+.ryox-size-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  border-style: dashed;
+}
+
+/* Scent Notes Olfactory Pyramid */
+.ryox-scent-notes-card {
+  background: #ffffff;
+  border: 1px solid rgba(191, 161, 95, 0.3);
+  border-radius: 16px;
+  padding: 1.8rem;
+  margin-bottom: 2.2rem;
+  box-shadow: var(--ryox-shadow-sm);
+}
+
+.ryox-scent-notes-header {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: var(--ryox-gold-dark);
+  font-family: var(--ryox-font-serif);
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 1.2rem;
+  padding-bottom: 0.8rem;
+  border-bottom: 1px solid var(--ryox-divider);
+}
+
+.ryox-scent-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+@media (max-width: 576px) {
+  .ryox-scent-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.ryox-scent-pyramid-item {
+  background: var(--ryox-surface-subtle);
+  padding: 1rem;
+  border-radius: 10px;
+  border: 1px solid var(--ryox-divider);
+}
+
+.ryox-scent-pyramid-label {
+  font-size: 0.68rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--ryox-gold-dark);
+  margin-bottom: 0.35rem;
+  font-weight: 700;
+}
+
+.ryox-scent-pyramid-val {
+  font-size: 0.88rem;
+  color: var(--ryox-text-heading);
+  line-height: 1.5;
+  font-weight: 500;
+}
+
+/* Quantity & Action Controls */
+.ryox-controls-group {
+  margin-bottom: 2.2rem;
+}
+
+.ryox-qty-picker {
+  display: inline-flex;
+  align-items: center;
+  background: #ffffff;
+  border: 1px solid var(--ryox-divider);
+  border-radius: 10px;
+  padding: 0.3rem;
+  margin-bottom: 1.6rem;
+  box-shadow: var(--ryox-shadow-sm);
+}
+
+.ryox-qty-btn {
+  width: 40px;
+  height: 40px;
+  border: none;
+  background: transparent;
+  color: var(--ryox-text);
+  font-size: 1.2rem;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.ryox-qty-btn:hover:not(:disabled) {
+  background: var(--ryox-bg-alt);
+  color: var(--ryox-gold-dark);
+}
+
+.ryox-qty-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.ryox-qty-val {
+  min-width: 45px;
+  text-align: center;
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--ryox-text-heading);
+}
+
+/* Action Buttons */
+.ryox-action-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 54px;
+  gap: 1.2rem;
+}
+
+@media (max-width: 576px) {
+  .ryox-action-row {
+    grid-template-columns: 1fr 1fr;
+  }
+  .ryox-wishlist-toggle {
+    grid-column: span 2;
+  }
+}
+
+.ryox-btn-cart {
+  background: var(--ryox-gold-gradient);
+  color: #14120e;
+  border: none;
+  border-radius: 12px;
+  padding: 1.15rem 1.6rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  box-shadow: 0 10px 30px rgba(191, 161, 95, 0.35);
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.ryox-btn-cart:hover:not(:disabled) {
+  transform: translateY(-2px);
+  filter: brightness(1.06);
+  box-shadow: 0 15px 35px rgba(191, 161, 95, 0.45);
+}
+
+.ryox-btn-cart:disabled {
+  background: #d4ccbd;
+  color: #8c847a;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.ryox-btn-buynow {
+  background: #1a1714;
+  border: 1px solid #1a1714;
+  color: #ffffff;
+  border-radius: 12px;
+  padding: 1.15rem 1.6rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.ryox-btn-buynow:hover:not(:disabled) {
+  background: #2b2621;
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.22);
+}
+
+.ryox-btn-buynow:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.ryox-wishlist-toggle {
+  width: 54px;
+  height: 54px;
+  border-radius: 12px;
+  background: #ffffff;
+  border: 1px solid var(--ryox-divider);
+  color: var(--ryox-text);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--ryox-shadow-sm);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.ryox-wishlist-toggle:hover {
+  border-color: var(--ryox-gold);
+  color: var(--ryox-gold-dark);
+  transform: translateY(-2px);
+}
+
+.ryox-wishlist-toggle.in-wishlist {
+  background: rgba(191, 161, 95, 0.12);
+  border-color: var(--ryox-gold);
+  color: var(--ryox-gold-dark);
+}
+
+/* Trust Badges */
+.ryox-trust-features {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--ryox-divider);
+  margin-top: 2rem;
+}
+
+@media (max-width: 600px) {
+  .ryox-trust-features {
+    grid-template-columns: 1fr;
+  }
+}
+
+.ryox-trust-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.4rem;
+  padding: 1.2rem 0.8rem;
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid var(--ryox-divider);
+  box-shadow: var(--ryox-shadow-sm);
+}
+
+.ryox-trust-icon {
+  color: var(--ryox-gold-dark);
+}
+
+.ryox-trust-title {
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: var(--ryox-text-heading);
+}
+
+.ryox-trust-sub {
+  font-size: 0.74rem;
+  color: var(--ryox-text-muted);
+}
+
+/* Tabs Section */
+.ryox-tabs-wrapper {
+  margin-top: 5rem;
+  margin-bottom: 5rem;
+}
+
+.ryox-tabs-header {
+  display: flex;
+  gap: 2.5rem;
+  border-bottom: 1px solid var(--ryox-divider);
+  margin-bottom: 2rem;
+}
+
+.ryox-tab-btn {
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--ryox-text-muted);
+  padding: 1.1rem 0;
+  font-size: 1.1rem;
+  font-family: var(--ryox-font-serif);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.ryox-tab-btn:hover {
+  color: var(--ryox-text-heading);
+}
+
+.ryox-tab-btn.active {
+  color: var(--ryox-gold-dark);
+  border-bottom-color: var(--ryox-gold);
+  font-weight: 600;
+}
+
+.ryox-tab-panel {
+  background: #ffffff;
+  border: 1px solid var(--ryox-divider);
+  border-radius: 18px;
+  padding: 2.8rem;
+  line-height: 1.8;
+  color: var(--ryox-text);
+  font-size: 1rem;
+  box-shadow: var(--ryox-shadow-md);
+}
+
+/* Related & Recently Viewed Sections */
+.ryox-section-heading {
+  font-size: 1.9rem;
+  font-family: var(--ryox-font-serif);
+  color: var(--ryox-text-heading);
+  margin-bottom: 2.2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.ryox-section-heading::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, var(--ryox-divider), transparent);
+}
+
+.ryox-products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1.8rem;
+  margin-bottom: 5rem;
+}
+
+.ryox-product-card-luxury {
+  background: #ffffff;
+  border: 1px solid var(--ryox-divider);
+  border-radius: 16px;
+  overflow: hidden;
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--ryox-shadow-sm);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.ryox-product-card-luxury:hover {
+  transform: translateY(-6px);
+  border-color: var(--ryox-gold);
+  box-shadow: var(--ryox-shadow-lg);
+}
+
+.ryox-card-img-box {
+  height: 240px;
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  background: radial-gradient(circle at center, #ffffff 0%, #f7f3eb 60%, #ece5d6 100%);
+}
+
+.ryox-card-img-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s ease;
+}
+
+.ryox-product-card-luxury:hover .ryox-card-img-box img {
+  transform: scale(1.08);
+}
+
+.ryox-card-body {
+  padding: 1.4rem;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.ryox-card-cat {
+  font-size: 0.68rem;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--ryox-gold-dark);
+  font-weight: 700;
+  margin-bottom: 0.4rem;
+}
+
+.ryox-card-title {
+  color: var(--ryox-text-heading);
+  font-family: var(--ryox-font-serif);
+  font-size: 1.08rem;
+  font-weight: 600;
+  margin-bottom: 0.8rem;
+  line-height: 1.3;
+}
+
+.ryox-card-price-row {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 1rem;
+  border-top: 1px solid var(--ryox-divider);
+}
+
+.ryox-card-price-val {
+  color: var(--ryox-text-heading);
+  font-weight: 700;
+  font-size: 1.15rem;
+}

@@ -1,0 +1,705 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800&family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:wght@300;400;500;600;700&display=swap');
+
+:root {
+  /* Luxury Light Palette */
+  --ryox-bg: #fdfbf7;
+  --ryox-bg-alt: #f7f4ed;
+  --ryox-surface: #ffffff;
+  --ryox-surface-subtle: #fcfaf6;
+  --ryox-card-bg: #ffffff;
+  
+  /* Champagne Gold Accents */
+  --ryox-gold: #bfa15f;
+  --ryox-gold-light: #d6bc7e;
+  --ryox-gold-dark: #9e7f3b;
+  --ryox-gold-gradient: linear-gradient(135deg, #d4b870 0%, #b89849 100%);
+  --ryox-gold-border: rgba(191, 161, 95, 0.28);
+  --ryox-gold-glow: rgba(191, 161, 95, 0.15);
+
+  /* Deep Charcoal & Obsidian Typography */
+  --ryox-text: #1a1714;
+  --ryox-text-heading: #141210;
+  --ryox-text-muted: #6b645c;
+  --ryox-text-subtle: #8c847a;
+  
+  /* Borders & Dividers */
+  --ryox-border: rgba(0, 0, 0, 0.07);
+  --ryox-border-light: rgba(0, 0, 0, 0.04);
+  --ryox-divider: #ede8df;
+
+  /* Shadows */
+  --ryox-shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.03);
+  --ryox-shadow-md: 0 10px 30px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.02);
+  --ryox-shadow-lg: 0 20px 45px rgba(0, 0, 0, 0.08), 0 4px 10px rgba(0, 0, 0, 0.03);
+  --ryox-shadow-gold: 0 10px 25px rgba(191, 161, 95, 0.2);
+
+  /* Fonts */
+  --ryox-font-serif: 'Cinzel', 'Playfair Display', Georgia, serif;
+  --ryox-font-body: 'Montserrat', 'DM Sans', system-ui, -apple-system, sans-serif;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--ryox-font-body);
+  background-color: var(--ryox-bg);
+  color: var(--ryox-text);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button, input, textarea, select {
+  font-family: inherit;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--ryox-bg-alt);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #d4ccbd;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--ryox-gold);
+}
+
+/* =========================================================
+   CATEGORY CARDS (LIGHT THEME)
+========================================================= */
+
+.category-card {
+  position: relative;
+  background: #ffffff;
+  border: 1px solid var(--ryox-divider);
+  border-radius: 16px;
+  padding: 2.2rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  text-decoration: none;
+  box-shadow: var(--ryox-shadow-sm);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+}
+
+.category-card::before {
+  content: "";
+  position: absolute;
+  width: 140px;
+  height: 140px;
+  top: -70px;
+  right: -70px;
+  border-radius: 50%;
+  background: rgba(191, 161, 95, 0.12);
+  filter: blur(25px);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.category-card::after {
+  content: "";
+  position: absolute;
+  left: 20%;
+  right: 20%;
+  bottom: 0;
+  height: 2px;
+  background: var(--ryox-gold-gradient);
+  transform: scaleX(0);
+  transition: transform 0.4s ease;
+}
+
+.category-card:hover {
+  transform: translateY(-7px);
+  border-color: var(--ryox-gold-light);
+  box-shadow: var(--ryox-shadow-md), 0 0 25px rgba(191, 161, 95, 0.08);
+}
+
+.category-card:hover::before {
+  opacity: 1;
+}
+
+.category-card:hover::after {
+  transform: scaleX(1);
+}
+
+.category-card .category-emoji {
+  font-size: 2.2rem;
+  margin-bottom: 1rem;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--ryox-surface-subtle);
+  border: 1px solid var(--ryox-divider);
+  transition: all 0.4s ease;
+}
+
+.category-card:hover .category-emoji {
+  transform: scale(1.1);
+  border-color: var(--ryox-gold);
+  background: rgba(191, 161, 95, 0.08);
+}
+
+.category-card .category-label {
+  color: var(--ryox-text-heading);
+  font-family: var(--ryox-font-serif);
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.5rem;
+  transition: color 0.3s ease;
+}
+
+.category-card:hover .category-label {
+  color: var(--ryox-gold-dark);
+}
+
+.category-card .category-explore {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--ryox-text-muted);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: all 0.3s ease;
+}
+
+.category-card:hover .category-explore {
+  color: var(--ryox-gold-dark);
+}
+
+.category-card:hover .category-arrow {
+  transform: translateX(4px);
+}
+
+/* =========================================================
+   RYOX LUXURY PRODUCT CARD (LIGHT THEME)
+========================================================= */
+
+.ryox-product-card {
+  position: relative;
+  overflow: hidden;
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 16px;
+  box-shadow: var(--ryox-shadow-sm);
+  transition: transform 0.5s cubic-bezier(.16, 1, .3, 1), border-color 0.4s ease, box-shadow 0.5s ease;
+}
+
+.ryox-product-card:hover {
+  transform: translateY(-8px);
+  border-color: var(--ryox-gold-border);
+  box-shadow: var(--ryox-shadow-lg), 0 0 25px rgba(191, 161, 95, 0.1);
+}
+
+.ryox-product-image-wrap {
+  position: relative;
+  display: block;
+  height: 320px;
+  overflow: hidden;
+  background: radial-gradient(circle at center, #ffffff 0%, #f7f4ed 60%, #ece6da 100%);
+  text-decoration: none;
+}
+
+.ryox-product-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transform: scale(1.01);
+  transform-origin: center center;
+  transition: transform 1.1s cubic-bezier(.16, 1, .3, 1), filter 0.7s ease;
+}
+
+.ryox-product-card:hover .ryox-product-image {
+  transform: scale(1.08) translate3d(0, -1%, 0);
+}
+
+.ryox-product-image-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at center, #ffffff 0%, #f6f3eb 60%, #ece6da 100%);
+}
+
+.ryox-product-image-placeholder span {
+  font-size: 3rem;
+  filter: drop-shadow(0 4px 12px rgba(191, 161, 95, 0.25));
+}
+
+.ryox-product-image-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(to top, rgba(20, 18, 14, 0.35) 0%, rgba(255, 255, 255, 0) 50%);
+  opacity: 0.6;
+  transition: opacity 0.5s ease;
+}
+
+.ryox-product-card:hover .ryox-product-image-overlay {
+  opacity: 0.3;
+}
+
+.ryox-product-badges {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.ryox-badge-new {
+  padding: 5px 10px;
+  border-radius: 4px;
+  background: var(--ryox-gold-gradient);
+  color: #14120e;
+  font-size: 0.58rem;
+  font-weight: 800;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+}
+
+.ryox-badge-best {
+  padding: 5px 10px;
+  border-radius: 4px;
+  background: #1a1714;
+  color: #ffffff;
+  font-size: 0.58rem;
+  font-weight: 800;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.ryox-wishlist-btn {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 5;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  color: var(--ryox-text);
+  backdrop-filter: blur(8px);
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  transition: transform 0.35s ease, background 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+.ryox-wishlist-btn:hover {
+  transform: scale(1.12);
+  background: #ffffff;
+  border-color: var(--ryox-gold);
+  color: var(--ryox-gold-dark);
+}
+
+.ryox-wishlist-btn.active {
+  color: var(--ryox-gold-dark);
+  background: #ffffff;
+  border-color: var(--ryox-gold);
+}
+
+.ryox-image-action {
+  position: absolute;
+  left: 50%;
+  bottom: 20px;
+  transform: translate(-50%, 12px);
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #ffffff;
+  background: rgba(20, 18, 14, 0.75);
+  backdrop-filter: blur(8px);
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  opacity: 0;
+  white-space: nowrap;
+  transition: opacity 0.45s ease, transform 0.5s cubic-bezier(.16, 1, .3, 1);
+}
+
+.ryox-product-card:hover .ryox-image-action {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+.ryox-product-info {
+  padding: 1.4rem 1.3rem 1.25rem;
+  background: #ffffff;
+}
+
+.ryox-product-category {
+  margin: 0 0 6px;
+  color: var(--ryox-gold-dark);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+}
+
+.ryox-product-name {
+  display: block;
+  margin-bottom: 1rem;
+  color: var(--ryox-text-heading);
+  font-family: var(--ryox-font-serif);
+  font-size: 1.05rem;
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: 0.3px;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.ryox-product-name:hover {
+  color: var(--ryox-gold-dark);
+}
+
+.ryox-product-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--ryox-divider);
+}
+
+.ryox-product-price {
+  color: var(--ryox-text-heading);
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+}
+
+.ryox-cart-btn {
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 50%;
+  color: #14120e;
+  background: var(--ryox-gold-gradient);
+  cursor: pointer;
+  box-shadow: 0 6px 16px rgba(191, 161, 95, 0.3);
+  transition: transform 0.35s cubic-bezier(.16, 1, .3, 1), box-shadow 0.35s ease, filter 0.3s ease;
+}
+
+.ryox-cart-btn:hover {
+  transform: scale(1.12);
+  filter: brightness(1.08);
+  box-shadow: 0 8px 22px rgba(191, 161, 95, 0.45);
+}
+
+/* =========================================================
+   LUXURY LIGHT FOOTER
+========================================================= */
+
+.luxury-footer {
+  background: #141210;
+  color: #f7f4ed;
+  position: relative;
+  overflow: hidden;
+  border-top: 1px solid rgba(191, 161, 95, 0.2);
+}
+
+.luxury-footer a:hover {
+  color: var(--ryox-gold) !important;
+}
+
+.footer-statement {
+  padding: 6rem 2rem 4.5rem;
+  text-align: center;
+  position: relative;
+  background: radial-gradient(circle at center, rgba(191, 161, 95, 0.12) 0%, rgba(20, 18, 16, 1) 70%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.footer-eyebrow {
+  color: var(--ryox-gold);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  margin-bottom: 1.2rem;
+}
+
+.footer-headline {
+  font-family: var(--ryox-font-serif);
+  font-size: clamp(2.2rem, 5vw, 3.8rem);
+  font-weight: 400;
+  color: #ffffff;
+  line-height: 1.2;
+  margin-bottom: 1.2rem;
+}
+
+.footer-headline span {
+  color: var(--ryox-gold-light);
+  font-style: italic;
+}
+
+.footer-statement-text {
+  color: #a8a096;
+  font-size: 0.95rem;
+  max-width: 550px;
+  margin: 0 auto 2.2rem;
+  line-height: 1.7;
+}
+
+.footer-explore {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: transparent;
+  border: 1px solid rgba(191, 161, 95, 0.45);
+  color: #ffffff;
+  padding: 0.9rem 2.2rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  transition: all 0.3s ease;
+}
+
+.footer-explore:hover {
+  border-color: var(--ryox-gold);
+  background: rgba(191, 161, 95, 0.15);
+  transform: translateY(-2px);
+}
+
+.footer-explore:hover .footer-arrow {
+  transform: translateX(4px);
+}
+
+.footer-main {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 1.5fr;
+  gap: 3rem;
+  padding: 4.5rem 3rem 3.5rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.footer-brand-logo {
+  font-family: var(--ryox-font-serif);
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: 3px;
+  color: #ffffff;
+  margin-bottom: 0.5rem;
+}
+
+.footer-brand-logo span {
+  color: var(--ryox-gold);
+}
+
+.footer-tagline {
+  color: var(--ryox-gold);
+  font-size: 0.65rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 1.2rem;
+}
+
+.footer-brand-text {
+  color: #9c9489;
+  font-size: 0.88rem;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+  max-width: 300px;
+}
+
+.footer-socials {
+  display: flex;
+  gap: 1.2rem;
+}
+
+.footer-socials .social {
+  color: #aaa;
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: color 0.3s ease;
+}
+
+.footer-column-title {
+  color: #ffffff;
+  font-family: var(--ryox-font-serif);
+  font-size: 0.85rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 1.4rem;
+}
+
+.footer-column {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.footer-link {
+  color: #9c9489;
+  font-size: 0.88rem;
+  transition: all 0.3s ease;
+}
+
+.footer-link:hover {
+  color: var(--ryox-gold) !important;
+  transform: translateX(4px);
+}
+
+.footer-newsletter .newsletter-text {
+  color: #9c9489;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  margin-bottom: 1.2rem;
+}
+
+.newsletter-form {
+  display: flex;
+  border-bottom: 1px solid rgba(191, 161, 95, 0.4);
+  padding-bottom: 6px;
+}
+
+.newsletter-input {
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-size: 0.88rem;
+  outline: none;
+  flex: 1;
+}
+
+.newsletter-input::placeholder {
+  color: #666;
+}
+
+.newsletter-button {
+  background: transparent;
+  border: none;
+  color: var(--ryox-gold);
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0 8px;
+  transition: transform 0.3s ease;
+}
+
+.newsletter-button:hover {
+  transform: translateX(4px);
+}
+
+.footer-watermark {
+  text-align: center;
+  font-family: var(--ryox-font-serif);
+  font-size: clamp(5rem, 16vw, 15rem);
+  font-weight: 800;
+  letter-spacing: 20px;
+  color: rgba(255, 255, 255, 0.02);
+  line-height: 0.8;
+  pointer-events: none;
+  user-select: none;
+}
+
+.footer-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.8rem 3rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  max-width: 1400px;
+  margin: 0 auto;
+  font-size: 0.78rem;
+  color: #777;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.footer-legal {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.footer-legal .legal-link {
+  color: #777;
+  transition: color 0.3s ease;
+}
+
+.footer-legal .legal-link:hover {
+  color: #ccc;
+}
+
+@media (max-width: 1050px) {
+  .footer-main {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .footer-brand {
+    grid-column: span 3;
+  }
+  .footer-newsletter {
+    grid-column: span 3;
+    max-width: 450px;
+  }
+}
+
+@media (max-width: 650px) {
+  .footer-main {
+    grid-template-columns: repeat(2, 1fr);
+    padding: 3rem 1.5rem;
+    gap: 2.5rem 1.5rem;
+  }
+  .footer-brand {
+    grid-column: span 2;
+  }
+  .footer-newsletter {
+    grid-column: span 2;
+  }
+  .footer-bottom {
+    flex-direction: column;
+    text-align: center;
+    padding: 1.5rem;
+  }
+}
