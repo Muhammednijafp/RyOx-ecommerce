@@ -7,7 +7,6 @@ import { createRazorpayOrder, verifyRazorpayPayment } from '../api/payments'
 import { ShieldCheck, Truck, Plus, AlertCircle } from 'lucide-react'
 import useCartStore from '../store/cartStore'
 import { getProductImage } from '../utils/imageUtils'
-import { loadRazorpayScript } from '../utils/razorpay'
 import toast from 'react-hot-toast'
 
 function CheckoutPage() {
@@ -172,8 +171,7 @@ function CheckoutPage() {
             theme: { color: '#bfa15f' },
           }
 
-          const isLoaded = await loadRazorpayScript()
-          if (isLoaded && window.Razorpay) {
+          if (window.Razorpay) {
             const rzp = new window.Razorpay(options)
             rzp.open()
           } else {

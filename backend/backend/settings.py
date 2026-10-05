@@ -17,12 +17,9 @@ SECRET_KEY = os.environ.get(
     'django-insecure-ryox-key-change-in-production-893710'
 )
 
-# DEBUG is True by default for local development unless explicitly in production
 DEBUG = os.environ.get('DEBUG', 'True').lower() in ('true', '1', 'yes')
 
-# Always allow localhost and 127.0.0.1 along with any configured hosts
-raw_hosts = os.environ.get('ALLOWED_HOSTS', '*').split(',')
-ALLOWED_HOSTS = list(set(['127.0.0.1', 'localhost', 'testserver', '*'] + [h.strip() for h in raw_hosts if h.strip()]))
+ALLOWED_HOSTS = ['*']
 
 FRONTEND_URL = os.environ.get('FRONTEND_URL', 'http://localhost:5173')
 
@@ -59,6 +56,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',  # Must be first
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -93,13 +91,23 @@ CHANNEL_LAYERS = {
     },
 }
 
-# Database Configuration
+# Database Configuration (SQLite locally, PostgreSQL in production when DATABASE_URL is set)
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+if 'DATABASE_URL' in os.environ and os.environ.get('DATABASE_URL'):
+    try:
+        import dj_database_url
+        DATABASES['default'] = dj_database_url.config(
+            conn_max_age=600,
+            ssl_require=True
+        )
+    except Exception:
+        pass
 
 # Custom User Model
 AUTH_USER_MODEL = 'users.CustomUser'
@@ -129,6 +137,14 @@ CORS_ALLOW_CREDENTIALS = True
 # Static & Media Files
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
@@ -151,15 +167,3 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', 'mhdnijaf0@gmail.com')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', 'hlrsbxzrekjcmsno')
 DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', f'RyOx <{EMAIL_HOST_USER}>')
-
-# Production Security Headers (Active when DEBUG is False)
-if not DEBUG:
-    SECURE_SSL_REDIRECT = os.environ.get('SECURE_SSL_REDIRECT', 'False').lower() == 'true'
-    SESSION_COOKIE_SECURE = True
-    CSRF_COOKIE_SECURE = True
-    SECURE_BROWSER_XSS_FILTER = True
-    SECURE_CONTENT_TYPE_NOSNIFF = True
-    X_FRAME_OPTIONS = 'DENY'
-    SECURE_HSTS_SECONDS = 31536000  # 1 year
-    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-    SECURE_HSTS_PRELOAD = True

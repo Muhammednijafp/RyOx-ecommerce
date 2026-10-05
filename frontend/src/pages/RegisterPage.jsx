@@ -34,19 +34,32 @@ function RegisterPage() {
   }
 
   const validatePhone = (phone) => {
-    const digits = (phone || '').replace(/\D/g, '')
-    return digits.length >= 10
+    return /^[0-9]{10}$/.test(phone)
   }
 
   const validatePassword = (password) => {
-    if (password.length < 6) {
-      return 'Password must be at least 6 characters long.'
+    if (password.length < 8) {
+      return 'Password must be at least 8 characters long.'
+    }
+    if (!/^[A-Z]/.test(password)) {
+      return 'Password must start with a capital letter.'
+    }
+    if (!/[0-9]/.test(password)) {
+      return 'Password must contain at least one number.'
+    }
+    if (!/[!@#$%^&*(),.?":{}|<>_\-\\[\]\/;'`~+=]/.test(password)) {
+      return 'Password must contain at least one special character.'
     }
     return null
   }
 
   const handleChange = (e) => {
     const { name, value } = e.target
+    if (name === 'phone') {
+      const onlyDigits = value.replace(/\D/g, '').slice(0, 10)
+      setForm({ ...form, phone: onlyDigits })
+      return
+    }
     setForm({ ...form, [name]: value })
   }
 
@@ -55,19 +68,18 @@ function RegisterPage() {
 
     const cleanName = form.full_name.trim()
     const cleanEmail = form.email.trim().toLowerCase()
-    const rawPhoneDigits = (form.phone || '').replace(/\D/g, '')
-    const cleanPhone = rawPhoneDigits.length >= 10 ? rawPhoneDigits.slice(-10) : rawPhoneDigits
+    const cleanPhone = form.phone.trim()
 
-    if (!cleanName || cleanName.length < 2) {
-      toast.error('Please enter your full name.')
+    if (!cleanName || !validateFullName(cleanName)) {
+      toast.error('Full name must contain only letters and spaces.')
       return
     }
     if (!cleanEmail || !validateEmail(cleanEmail)) {
       toast.error('Please enter a valid email address.')
       return
     }
-    if (!cleanPhone || cleanPhone.length !== 10) {
-      toast.error('Please enter a valid 10-digit phone number.')
+    if (!cleanPhone || !validatePhone(cleanPhone)) {
+      toast.error('Phone number must contain exactly 10 digits.')
       return
     }
     if (!form.password) {
@@ -89,15 +101,13 @@ function RegisterPage() {
     setLoading(true)
     try {
       await registerUser({
+        ...form,
         full_name: cleanName,
         email: cleanEmail,
         phone: cleanPhone,
-        password: form.password,
-        password2: form.password2,
       })
 
-      localStorage.setItem('savedLoginEmail', cleanEmail)
-      toast.success('Account created successfully! Welcome to RyOx.')
+      toast.success('Account created! Welcome to RyOx.')
       navigate('/login')
     } catch (err) {
       const errors = err.response?.data
