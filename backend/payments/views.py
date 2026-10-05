@@ -43,7 +43,7 @@ class CreateRazorpayOrderView(APIView):
         })
 
         # save payment record
-        payment, created = Payment.objects.get_or_create(
+        payment, _ = Payment.objects.get_or_create(
             order=order,
             defaults={
                 'user':              request.user,
@@ -51,10 +51,6 @@ class CreateRazorpayOrderView(APIView):
                 'amount':            order.final_amount,
             }
         )
-        if not created:
-            payment.razorpay_order_id = razorpay_order['id']
-            payment.amount = order.final_amount
-            payment.save()
 
         return Response({
             'razorpay_order_id': razorpay_order['id'],
@@ -110,8 +106,8 @@ class VerifyPaymentView(APIView):
             Notification.objects.create(
                 user    = request.user,
                 type    = 'order',
-                title   = 'Payment Successful!',
-                message = f'Payment for Order #{order.id} of ₹{order.final_amount} confirmed.',
+                title   = 'Payment Successful — Order Confirmed!',
+                message = f'Payment for Order #{order.id} of ₹{order.final_amount} received successfully. Your perfume is now confirmed and released for packaging & shipping.',
             )
 
             return Response({'message': 'Payment verified successfully', 'order_id': order.id})

@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { getOrder, cancelOrder } from '../api/orders'
-import { ChevronLeft, Truck, Package, Clock, ShieldCheck, MapPin, CheckCircle2, AlertTriangle, ExternalLink, X } from 'lucide-react'
+import { createRazorpayOrder, verifyRazorpayPayment } from '../api/payments'
+import { loadRazorpay } from '../utils/razorpay'
+import { ChevronLeft, Truck, Package, Clock, ShieldCheck, MapPin, CheckCircle2, AlertTriangle, ExternalLink, X, CreditCard } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { getProductImage } from '../utils/imageUtils'
 
@@ -10,7 +12,54 @@ function OrderDetailPage() {
   const [order, setOrder] = useState(null)
   const [loading, setLoading] = useState(true)
   const [cancelling, setCancelling] = useState(false)
+  const [paying, setPaying] = useState(false)
   const [trackingModalOpen, setTrackingModalOpen] = useState(false)
+
+  const handlePayNow = async () => {
+    if (!order) return
+    setPaying(true)
+    try {
+      await loadRazorpay()
+      const rzpRes = await createRazorpayOrder(order.id)
+      const { razorpay_order_id, amount, currency, key } = rzpRes.data
+
+      const options = {
+        key,
+        amount,
+        currency,
+        name: 'RyOx Maison De Parfum',
+        description: `Order #${order.id}`,
+        order_id: razorpay_order_id,
+        handler: async (response) => {
+          try {
+            await verifyRazorpayPayment({
+              order_id: order.id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_signature: response.razorpay_signature,
+            })
+            toast.success('Payment verified! Your order is confirmed and released for shipping.')
+            const res = await getOrder(id)
+            setOrder(res.data)
+          } catch {
+            toast.error('Payment verification failed. Please check with support.')
+          }
+        },
+        theme: { color: '#bfa15f' },
+      }
+
+      if (window.Razorpay) {
+        const rzp = new window.Razorpay(options)
+        rzp.open()
+      } else {
+        toast.error('Razorpay gateway could not be loaded.')
+      }
+    } catch (err) {
+      toast.error(err.response?.data?.error || 'Failed to initiate payment.')
+    } finally {
+      setPaying(false)
+    }
+  }
 
   useEffect(() => {
     const fetchOrder = async () => {
@@ -299,8 +348,24 @@ function OrderDetailPage() {
                 ...styles.paymentStatus,
                 color: order.is_paid ? '#16a34a' : '#d97706'
               }}>
-                {order.is_paid ? '✅ Payment Verified' : '⏳ Payment Pending'}
+                {order.is_paid ? '✅ Payment Completed' : '⏳ Payment Pending'}
               </p>
+
+              {!order.is_paid && order.payment_method === 'online' && order.status !== 'cancelled' && (
+                <div style={styles.payNowSection}>
+                  <p style={styles.payNotice}>
+                    ⚠️ Payment is pending. Your order will be confirmed and released for packaging & dispatch once the bill amount is paid.
+                  </p>
+                  <button
+                    onClick={handlePayNow}
+                    disabled={paying}
+                    style={paying ? styles.payNowBtnDisabled : styles.payNowBtn}
+                  >
+                    <CreditCard size={16} />
+                    {paying ? 'Processing...' : `Pay ₹${order.final_amount} to Confirm Order`}
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -437,6 +502,10 @@ const styles = {
   paymentLabel: { color: 'var(--ryox-text-muted)', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '0.4rem', fontWeight: '600' },
   paymentVal: { color: 'var(--ryox-text-heading)', fontSize: '0.95rem', marginBottom: '0.4rem', fontWeight: '600' },
   paymentStatus: { fontSize: '0.88rem', fontWeight: '700' },
+  payNowSection: { marginTop: '1.2rem', display: 'flex', flexDirection: 'column', gap: '0.8rem' },
+  payNotice: { backgroundColor: '#fffbeb', border: '1px solid #fde68a', color: '#92400e', padding: '0.8rem 1rem', borderRadius: '8px', fontSize: '0.82rem', lineHeight: '1.4', margin: 0 },
+  payNowBtn: { background: 'var(--ryox-gold-gradient)', color: '#14120e', border: 'none', padding: '0.9rem 1.4rem', borderRadius: '8px', fontWeight: '700', fontSize: '0.88rem', letterSpacing: '0.5px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', boxShadow: '0 4px 15px rgba(191,161,95,0.35)' },
+  payNowBtnDisabled: { backgroundColor: '#e5dfd5', color: '#8c847a', border: 'none', padding: '0.9rem 1.4rem', borderRadius: '8px', fontWeight: '700', fontSize: '0.88rem', cursor: 'not-allowed', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' },
 
   // Tracking Modal
   modalOverlay: { position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(8px)', zIndex: 4000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1.5rem' },

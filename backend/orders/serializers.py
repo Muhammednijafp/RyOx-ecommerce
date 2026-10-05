@@ -117,16 +117,21 @@ class PlaceOrderSerializer(serializers.Serializer):
         tracking_num  = f"RYX-{random_suffix}-IN"
         est_delivery  = timezone.now().date() + timezone.timedelta(days=5)
 
+        # Determine initial status: COD is confirmed, Online remains pending until payment completes
+        is_cod = validated_data['payment_method'] == 'cod'
+        initial_status = 'confirmed' if is_cod else 'pending'
+
         # create order
         order = Order.objects.create(
             user               = user,
             address            = address,
+            status             = initial_status,
             total_amount       = total,
-            discount_amount     = discount,
+            discount_amount    = discount,
             final_amount       = final_amount,
             coupon_code        = coupon_code,
             payment_method     = validated_data['payment_method'],
-            is_paid            = validated_data['payment_method'] == 'cod',
+            is_paid            = False,
             tracking_number    = tracking_num,
             courier_partner    = "RyOx Express Logistics",
             estimated_delivery = est_delivery,
@@ -147,12 +152,20 @@ class PlaceOrderSerializer(serializers.Serializer):
         # clear cart
         cart.items.all().delete()
 
-        # create notification
-        Notification.objects.create(
-            user    = user,
-            type    = 'order',
-            title   = 'Order Placed Successfully!',
-            message = f'Your order #{order.id} has been placed. Tracking ID: {tracking_num}',
-        )
+        # create notification based on payment method
+        if is_cod:
+            Notification.objects.create(
+                user    = user,
+                type    = 'order',
+                title   = 'COD Order Confirmed!',
+                message = f'Your Cash on Delivery order #{order.id} is confirmed and will be prepared for dispatch.',
+            )
+        else:
+            Notification.objects.create(
+                user    = user,
+                type    = 'order',
+                title   = 'Order Created — Awaiting Payment',
+                message = f'Order #{order.id} of ₹{final_amount} created. Complete payment to confirm and release your fragrances for shipping.',
+            )
 
         return order
