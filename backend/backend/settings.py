@@ -125,19 +125,17 @@ SIMPLE_JWT = {
 }
 
 # CORS Configuration
-_cors_env = os.environ.get('CORS_ALLOWED_ORIGINS', '').strip()
-if _cors_env == '*' or not _cors_env:
-    CORS_ALLOW_ALL_ORIGINS = True
-    CORS_ALLOWED_ORIGINS = [
-        'http://localhost:5173',
-        'http://127.0.0.1:5173',
-    ]
-else:
+_raw_cors = os.environ.get('CORS_ALLOWED_ORIGINS', '')
+_parsed_cors = [
+    o.strip() for o in _raw_cors.split(',')
+    if o.strip() and o.strip() != '*' and (o.strip().startswith('http://') or o.strip().startswith('https://'))
+]
+if _parsed_cors:
+    CORS_ALLOWED_ORIGINS = _parsed_cors
     CORS_ALLOW_ALL_ORIGINS = False
-    CORS_ALLOWED_ORIGINS = [
-        origin.strip() for origin in _cors_env.split(',')
-        if origin.strip() and origin.strip() != '*' and (origin.strip().startswith('http://') or origin.strip().startswith('https://'))
-    ]
+else:
+    CORS_ALLOW_ALL_ORIGINS = True
+
 CORS_ALLOW_CREDENTIALS = True
 
 # Static & Media Files
