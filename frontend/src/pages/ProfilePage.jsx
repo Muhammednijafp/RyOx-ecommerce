@@ -55,14 +55,7 @@ function ProfilePage() {
   const handleAddAddress = async (e) => {
     e.preventDefault()
     try {
-      const cleanPhone = (newAddr.phone || '').replace(/\D/g, '').slice(-10)
-      const cleanPin = (newAddr.pincode || '').replace(/\D/g, '')
-
-      await addAddress({
-        ...newAddr,
-        phone: cleanPhone,
-        pincode: cleanPin,
-      })
+      await addAddress(newAddr)
       toast.success('Address added!')
       setAddingAddr(false)
       setNewAddr({
@@ -71,16 +64,8 @@ function ProfilePage() {
       })
       const res = await getAddresses()
       setAddresses(res.data)
-    } catch (err) {
-      const errors = err.response?.data
-      if (errors && typeof errors === 'object') {
-        Object.values(errors).forEach((msg) => {
-          if (Array.isArray(msg)) msg.forEach((m) => toast.error(m))
-          else toast.error(String(msg))
-        })
-      } else {
-        toast.error('Failed to add address')
-      }
+    } catch {
+      toast.error('Failed to add address')
     }
   }
 
@@ -211,12 +196,12 @@ function ProfilePage() {
               <form onSubmit={handleAddAddress} style={styles.addrForm}>
                 <div style={styles.formGrid}>
                   {[
-                    { key: 'full_name', label: 'Full Name' },
-                    { key: 'phone', label: 'Phone' },
-                    { key: 'address_line', label: 'Address Line' },
-                    { key: 'city', label: 'City' },
-                    { key: 'state', label: 'State' },
-                    { key: 'pincode', label: 'Pincode' },
+                    { key: 'full_name', label: 'Full Name', placeholder: 'e.g. Muhammed Nijaf' },
+                    { key: 'phone', label: 'Phone Number', placeholder: '10-digit mobile (e.g. 9876543210)' },
+                    { key: 'address_line', label: 'Address Line', placeholder: 'House/Flat, Street & Area' },
+                    { key: 'city', label: 'City', placeholder: 'City / Town' },
+                    { key: 'state', label: 'State', placeholder: 'State' },
+                    { key: 'pincode', label: 'Pincode', placeholder: '6-digit PIN code' },
                   ].map((field) => (
                     <div key={field.key} style={styles.field}>
                       <label style={styles.label}>{field.label}</label>
@@ -224,6 +209,7 @@ function ProfilePage() {
                         type="text"
                         value={newAddr[field.key]}
                         onChange={(e) => setNewAddr({ ...newAddr, [field.key]: e.target.value })}
+                        placeholder={field.placeholder}
                         style={styles.input}
                         required
                       />

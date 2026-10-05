@@ -81,7 +81,7 @@ function CheckoutPage() {
     try {
       const res = await addAddress({
         ...newAddr,
-        phone: newAddr.phone.replace(/\D/g, '').slice(-10),
+        phone: newAddr.phone.replace(/\D/g, ''),
         pincode: newAddr.pincode.replace(/\D/g, ''),
       })
       toast.success('Address saved successfully!')
@@ -93,16 +93,8 @@ function CheckoutPage() {
       setFormErrors({})
       await loadAddresses()
       setSelectedAddr(res.data.id)
-    } catch (err) {
-      const errors = err.response?.data
-      if (errors && typeof errors === 'object') {
-        Object.values(errors).forEach((msg) => {
-          if (Array.isArray(msg)) msg.forEach((m) => toast.error(m))
-          else toast.error(String(msg))
-        })
-      } else {
-        toast.error('Failed to add address')
-      }
+    } catch {
+      toast.error('Failed to add address')
     }
   }
 

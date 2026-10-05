@@ -48,38 +48,38 @@ class AddressSerializer(serializers.ModelSerializer):
                   'city', 'state', 'pincode', 'is_default']
 
     def validate_full_name(self, value):
-        name = value.strip()
+        name = str(value).strip()
         if len(name) < 2:
             raise serializers.ValidationError("Full name must be at least 2 characters long.")
         return name
 
     def validate_phone(self, value):
-        raw_digits = re.sub(r'\D', '', str(value))
-        clean_phone = raw_digits[-10:] if len(raw_digits) >= 10 else raw_digits
-        if not re.match(r'^[6-9]\d{9}$', clean_phone):
-            raise serializers.ValidationError("Please enter a valid 10-digit Indian mobile number (e.g. 9876543210).")
-        return clean_phone
+        raw = re.sub(r'\D', '', str(value))
+        clean = raw[-10:] if len(raw) >= 10 else raw
+        if len(clean) != 10:
+            raise serializers.ValidationError("Please enter a valid 10-digit mobile number.")
+        return clean
 
     def validate_address_line(self, value):
-        addr = value.strip()
-        if len(addr) < 3:
-            raise serializers.ValidationError("Address line must be at least 3 characters long.")
+        addr = str(value).strip()
+        if len(addr) < 2:
+            raise serializers.ValidationError("Address line must be at least 2 characters long.")
         return addr
 
     def validate_city(self, value):
-        city = value.strip()
-        if len(city) < 2:
-            raise serializers.ValidationError("City name must be at least 2 characters long.")
+        city = str(value).strip()
+        if not city:
+            raise serializers.ValidationError("City is required.")
         return city
 
     def validate_state(self, value):
-        state = value.strip()
-        if len(state) < 2:
-            raise serializers.ValidationError("State name must be at least 2 characters long.")
+        state = str(value).strip()
+        if not state:
+            raise serializers.ValidationError("State is required.")
         return state
 
     def validate_pincode(self, value):
         pin = re.sub(r'\D', '', str(value))
-        if not re.match(r'^[1-9][0-9]{5}$', pin):
-            raise serializers.ValidationError("Please enter a valid 6-digit Indian PIN code.")
+        if len(pin) != 6:
+            raise serializers.ValidationError("Please enter a valid 6-digit PIN code.")
         return pin
