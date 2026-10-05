@@ -49,23 +49,31 @@ function CheckoutPage() {
 
   const validateAddressForm = () => {
     const errors = {}
-    const nameRegex = /^[A-Za-z\s.'-]{2,100}$/
-    if (!newAddr.full_name.trim()) errors.full_name = 'Full name is required.'
-    else if (!nameRegex.test(newAddr.full_name.trim())) errors.full_name = 'Only letters and spaces are allowed.'
+    const cleanName = (newAddr.full_name || '').trim()
+    const phoneDigits = (newAddr.phone || '').replace(/\D/g, '').slice(-10)
+    const cleanAddr = (newAddr.address_line || '').trim()
+    const cleanCity = (newAddr.city || '').trim()
+    const cleanState = (newAddr.state || '').trim()
+    const pinDigits = (newAddr.pincode || '').replace(/\D/g, '')
 
-    const phoneDigits = newAddr.phone.replace(/\D/g, '')
-    if (!phoneDigits) errors.phone = 'Phone number is required.'
-    else if (phoneDigits.length !== 10) errors.phone = 'Enter a valid 10-digit mobile number.'
-
-    if (!newAddr.address_line.trim()) errors.address_line = 'House/Flat, Street & Area required.'
-    else if (newAddr.address_line.trim().length < 5) errors.address_line = 'Address must be at least 5 characters.'
-
-    if (!newAddr.city.trim()) errors.city = 'City name is required.'
-    if (!newAddr.state.trim()) errors.state = 'State name is required.'
-
-    const pinDigits = newAddr.pincode.replace(/\D/g, '')
-    if (!pinDigits) errors.pincode = 'PIN code is required.'
-    else if (pinDigits.length !== 6) errors.pincode = 'PIN code must be exactly 6 digits.'
+    if (!cleanName || cleanName.length < 2) {
+      errors.full_name = 'Please enter a valid full name.'
+    }
+    if (!phoneDigits || phoneDigits.length !== 10) {
+      errors.phone = 'Enter a valid 10-digit mobile number.'
+    }
+    if (!cleanAddr || cleanAddr.length < 2) {
+      errors.address_line = 'Please enter a valid address.'
+    }
+    if (!cleanCity) {
+      errors.city = 'City name is required.'
+    }
+    if (!cleanState) {
+      errors.state = 'State name is required.'
+    }
+    if (!pinDigits || pinDigits.length !== 6) {
+      errors.pincode = 'PIN code must be exactly 6 digits.'
+    }
 
     setFormErrors(errors)
     return Object.keys(errors).length === 0
@@ -74,16 +82,28 @@ function CheckoutPage() {
   const handleAddAddress = async (e) => {
     e.preventDefault()
     if (!validateAddressForm()) {
-      toast.error('Please resolve the address errors before saving.')
+      toast.error('Please resolve the highlighted errors.')
       return
     }
 
     try {
+      const cleanName = (newAddr.full_name || '').trim()
+      const cleanPhone = (newAddr.phone || '').replace(/\D/g, '').slice(-10)
+      const cleanAddr = (newAddr.address_line || '').trim()
+      const cleanCity = (newAddr.city || '').trim()
+      const cleanState = (newAddr.state || '').trim()
+      const cleanPin = (newAddr.pincode || '').replace(/\D/g, '')
+
       const res = await addAddress({
-        ...newAddr,
-        phone: newAddr.phone.replace(/\D/g, ''),
-        pincode: newAddr.pincode.replace(/\D/g, ''),
+        full_name: cleanName,
+        phone: cleanPhone,
+        address_line: cleanAddr,
+        city: cleanCity,
+        state: cleanState,
+        pincode: cleanPin,
+        is_default: Boolean(newAddr.is_default),
       })
+
       toast.success('Address saved successfully!')
       setAddingAddress(false)
       setNewAddr({
@@ -92,9 +112,19 @@ function CheckoutPage() {
       })
       setFormErrors({})
       await loadAddresses()
-      setSelectedAddr(res.data.id)
-    } catch {
-      toast.error('Failed to add address')
+      if (res?.data?.id) {
+        setSelectedAddr(res.data.id)
+      }
+    } catch (err) {
+      const errors = err.response?.data
+      if (errors && typeof errors === 'object') {
+        Object.values(errors).forEach((msg) => {
+          if (Array.isArray(msg)) msg.forEach((m) => toast.error(m))
+          else toast.error(String(msg))
+        })
+      } else {
+        toast.error('Failed to add address')
+      }
     }
   }
 
