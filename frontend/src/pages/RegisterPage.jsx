@@ -25,16 +25,16 @@ function RegisterPage() {
   }
 
   const validateFullName = (name) => {
-    const nameRegex = /^[A-Za-z]+(?:[ '-][A-Za-z]+)*$/
     return (
       name.length >= 2 &&
       name.length <= 100 &&
-      nameRegex.test(name.trim())
+      /^[A-Za-z\s.'-]+$/.test(name.trim())
     )
   }
 
   const validatePhone = (phone) => {
-    return /^[0-9]{10}$/.test(phone)
+    const digits = (phone || '').replace(/\D/g, '').slice(-10)
+    return digits.length === 10
   }
 
   const validatePassword = (password) => {
@@ -56,7 +56,7 @@ function RegisterPage() {
   const handleChange = (e) => {
     const { name, value } = e.target
     if (name === 'phone') {
-      const onlyDigits = value.replace(/\D/g, '').slice(0, 10)
+      const onlyDigits = value.replace(/\D/g, '').slice(-10)
       setForm({ ...form, phone: onlyDigits })
       return
     }
@@ -68,17 +68,17 @@ function RegisterPage() {
 
     const cleanName = form.full_name.trim()
     const cleanEmail = form.email.trim().toLowerCase()
-    const cleanPhone = form.phone.trim()
+    const cleanPhone = (form.phone || '').replace(/\D/g, '').slice(-10)
 
     if (!cleanName || !validateFullName(cleanName)) {
-      toast.error('Full name must contain only letters and spaces.')
+      toast.error('Please enter a valid full name.')
       return
     }
     if (!cleanEmail || !validateEmail(cleanEmail)) {
       toast.error('Please enter a valid email address.')
       return
     }
-    if (!cleanPhone || !validatePhone(cleanPhone)) {
+    if (!cleanPhone || cleanPhone.length !== 10) {
       toast.error('Phone number must contain exactly 10 digits.')
       return
     }

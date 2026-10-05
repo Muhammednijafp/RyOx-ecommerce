@@ -11,8 +11,20 @@ class RegisterSerializer(serializers.ModelSerializer):
         model  = CustomUser
         fields = ['email', 'full_name', 'phone', 'password', 'password2']
 
+    def validate_email(self, value):
+        email = value.strip().lower()
+        if CustomUser.objects.filter(email=email).exists():
+            raise serializers.ValidationError("An account with this email already exists. Please log in.")
+        return email
+
+    def validate_phone(self, value):
+        clean_phone = re.sub(r'\D', '', value)
+        if clean_phone and len(clean_phone) > 10:
+            clean_phone = clean_phone[-10:]
+        return clean_phone
+
     def validate(self, attrs):
-        if attrs['password'] != attrs['password2']:
+        if attrs.get('password') != attrs.get('password2'):
             raise serializers.ValidationError({'password': 'Passwords do not match'})
         return attrs
 

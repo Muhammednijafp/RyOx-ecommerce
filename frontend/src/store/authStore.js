@@ -19,10 +19,24 @@ const useAuthStore = create((set, get) => ({
       return { success: true }
     } catch (err) {
       set({ loading: false })
-      const detail = err.response?.data?.detail
-      const errorMsg = detail === 'No active account found with the given credentials'
-        ? 'Invalid email or password. Please check your credentials or register.'
-        : detail || err.response?.data?.non_field_errors?.[0] || 'Login failed. Please check your credentials.'
+      const data = err.response?.data
+      let errorMsg = 'Login failed. Please check your credentials.'
+      if (data) {
+        if (data.detail === 'No active account found with the given credentials') {
+          errorMsg = 'Invalid email or password. Please check your credentials or register.'
+        } else if (typeof data.detail === 'string') {
+          errorMsg = data.detail
+        } else if (Array.isArray(data.non_field_errors)) {
+          errorMsg = data.non_field_errors.join(' ')
+        } else if (typeof data === 'object') {
+          const firstVal = Object.values(data)[0]
+          if (Array.isArray(firstVal)) {
+            errorMsg = firstVal.join(' ')
+          } else if (typeof firstVal === 'string') {
+            errorMsg = firstVal
+          }
+        }
+      }
       return { success: false, error: errorMsg }
     }
   },
