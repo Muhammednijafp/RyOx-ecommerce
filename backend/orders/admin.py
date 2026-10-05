@@ -13,6 +13,28 @@ class OrderAdmin(admin.ModelAdmin):
     search_fields = ['id', 'user__email', 'tracking_number', 'coupon_code']
     inlines       = [OrderItemInline]
 
+    def save_model(self, request, obj, form, change):
+        if change and 'status' in form.changed_data:
+            from notifications.models import Notification
+            status_labels = {
+                'confirmed': 'Order Confirmed',
+                'processing': 'Order is being prepared',
+                'shipped': f'Order Shipped via {obj.courier_partner}',
+                'delivered': 'Order Delivered 🎉',
+                'cancelled': 'Order Cancelled',
+                'returned': 'Order Returned'
+            }
+            title = status_labels.get(obj.status, f'Order Status: {obj.status.capitalize()}')
+            message = f'Your order #{obj.id} status has been updated to {obj.status.capitalize()}. Tracking ID: {obj.tracking_number or "N/A"}'
+            if obj.user:
+                Notification.objects.create(
+                    user=obj.user,
+                    type='order',
+                    title=title,
+                    message=message
+                )
+        super().save_model(request, obj, form, change)
+
 
 admin.site.register(Order, OrderAdmin)
 admin.site.register(OrderItem)
