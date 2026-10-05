@@ -43,7 +43,7 @@ class CreateRazorpayOrderView(APIView):
         })
 
         # save payment record
-        payment, _ = Payment.objects.get_or_create(
+        payment, created = Payment.objects.get_or_create(
             order=order,
             defaults={
                 'user':              request.user,
@@ -51,6 +51,10 @@ class CreateRazorpayOrderView(APIView):
                 'amount':            order.final_amount,
             }
         )
+        if not created:
+            payment.razorpay_order_id = razorpay_order['id']
+            payment.amount = order.final_amount
+            payment.save()
 
         return Response({
             'razorpay_order_id': razorpay_order['id'],
