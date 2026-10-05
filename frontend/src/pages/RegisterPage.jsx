@@ -2,9 +2,6 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { registerUser } from '../api/auth'
 import toast from 'react-hot-toast'
-import PhoneInput from 'react-phone-number-input'
-import 'react-phone-number-input/style.css'
-import './RegisterPage.css'
 
 function RegisterPage() {
   const [form, setForm] = useState({
@@ -32,11 +29,6 @@ function RegisterPage() {
     )
   }
 
-  const validatePhone = (phone) => {
-    const digits = (phone || '').replace(/\D/g, '').slice(-10)
-    return digits.length === 10
-  }
-
   const validatePassword = (password) => {
     if (password.length < 8) {
       return 'Password must be at least 8 characters long.'
@@ -56,7 +48,7 @@ function RegisterPage() {
   const handleChange = (e) => {
     const { name, value } = e.target
     if (name === 'phone') {
-      const onlyDigits = value.replace(/\D/g, '').slice(-10)
+      const onlyDigits = value.replace(/\D/g, '').slice(0, 10)
       setForm({ ...form, phone: onlyDigits })
       return
     }
@@ -68,7 +60,7 @@ function RegisterPage() {
 
     const cleanName = form.full_name.trim()
     const cleanEmail = form.email.trim().toLowerCase()
-    const cleanPhone = (form.phone || '').replace(/\D/g, '').slice(-10)
+    const cleanPhone = form.phone.replace(/\D/g, '').slice(-10)
 
     if (!cleanName || !validateFullName(cleanName)) {
       toast.error('Please enter a valid full name.')
@@ -79,7 +71,7 @@ function RegisterPage() {
       return
     }
     if (!cleanPhone || cleanPhone.length !== 10) {
-      toast.error('Phone number must contain exactly 10 digits.')
+      toast.error('Please enter a valid 10-digit mobile number.')
       return
     }
     if (!form.password) {
@@ -190,14 +182,22 @@ function RegisterPage() {
           {/* Phone */}
           <div style={styles.field}>
             <label style={styles.label}>Phone Number</label>
-            <PhoneInput
-              international
-              defaultCountry="IN"
-              value={form.phone}
-              onChange={(value) => setForm({ ...form, phone: value || '' })}
-              placeholder="Enter 10-digit mobile"
-              className="ryox-phone-input"
-            />
+            <div style={styles.phoneGroup}>
+              <span style={styles.phonePrefix}>🇮🇳 +91</span>
+              <input
+                type="tel"
+                name="phone"
+                value={form.phone}
+                onChange={handleChange}
+                placeholder="10-digit mobile number"
+                maxLength={10}
+                style={styles.phoneInput}
+                autoComplete="tel-national"
+              />
+            </div>
+            {form.phone && form.phone.length > 0 && form.phone.length < 10 && (
+              <p style={styles.hintText}>{10 - form.phone.length} more digits needed</p>
+            )}
           </div>
 
           {/* Password */}
@@ -363,6 +363,49 @@ const styles = {
     width: '100%',
     boxSizing: 'border-box',
     boxShadow: 'var(--ryox-shadow-sm)',
+  },
+
+  phoneGroup: {
+    display: 'flex',
+    alignItems: 'center',
+    backgroundColor: '#ffffff',
+    border: '1px solid var(--ryox-divider)',
+    borderRadius: '8px',
+    boxShadow: 'var(--ryox-shadow-sm)',
+    overflow: 'hidden',
+  },
+
+  phonePrefix: {
+    padding: '0.85rem 0.9rem',
+    backgroundColor: 'var(--ryox-surface-subtle)',
+    borderRight: '1px solid var(--ryox-divider)',
+    color: 'var(--ryox-text-heading)',
+    fontSize: '0.88rem',
+    fontWeight: '600',
+    userSelect: 'none',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.3rem',
+  },
+
+  phoneInput: {
+    flex: 1,
+    padding: '0.85rem 1rem',
+    backgroundColor: 'transparent',
+    border: 'none',
+    color: 'var(--ryox-text-heading)',
+    fontSize: '0.92rem',
+    outline: 'none',
+    letterSpacing: '1px',
+    width: '100%',
+    boxSizing: 'border-box',
+  },
+
+  hintText: {
+    color: 'var(--ryox-text-muted)',
+    fontSize: '0.75rem',
+    margin: '0',
+    fontStyle: 'italic',
   },
 
   validHint: {
