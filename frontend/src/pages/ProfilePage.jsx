@@ -55,7 +55,14 @@ function ProfilePage() {
   const handleAddAddress = async (e) => {
     e.preventDefault()
     try {
-      await addAddress(newAddr)
+      const cleanPhone = (newAddr.phone || '').replace(/\D/g, '').slice(-10)
+      const cleanPin = (newAddr.pincode || '').replace(/\D/g, '')
+
+      await addAddress({
+        ...newAddr,
+        phone: cleanPhone,
+        pincode: cleanPin,
+      })
       toast.success('Address added!')
       setAddingAddr(false)
       setNewAddr({
@@ -64,8 +71,16 @@ function ProfilePage() {
       })
       const res = await getAddresses()
       setAddresses(res.data)
-    } catch {
-      toast.error('Failed to add address')
+    } catch (err) {
+      const errors = err.response?.data
+      if (errors && typeof errors === 'object') {
+        Object.values(errors).forEach((msg) => {
+          if (Array.isArray(msg)) msg.forEach((m) => toast.error(m))
+          else toast.error(String(msg))
+        })
+      } else {
+        toast.error('Failed to add address')
+      }
     }
   }
 

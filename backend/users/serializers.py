@@ -49,20 +49,21 @@ class AddressSerializer(serializers.ModelSerializer):
 
     def validate_full_name(self, value):
         name = value.strip()
-        if len(name) < 3:
-            raise serializers.ValidationError("Full name must be at least 3 characters long.")
+        if len(name) < 2:
+            raise serializers.ValidationError("Full name must be at least 2 characters long.")
         return name
 
     def validate_phone(self, value):
-        clean_phone = re.sub(r'\D', '', value)
+        raw_digits = re.sub(r'\D', '', str(value))
+        clean_phone = raw_digits[-10:] if len(raw_digits) >= 10 else raw_digits
         if not re.match(r'^[6-9]\d{9}$', clean_phone):
-            raise serializers.ValidationError("Please enter a valid 10-digit Indian mobile number starting with 6, 7, 8, or 9.")
+            raise serializers.ValidationError("Please enter a valid 10-digit Indian mobile number (e.g. 9876543210).")
         return clean_phone
 
     def validate_address_line(self, value):
         addr = value.strip()
-        if len(addr) < 5:
-            raise serializers.ValidationError("Address line must be at least 5 characters long.")
+        if len(addr) < 3:
+            raise serializers.ValidationError("Address line must be at least 3 characters long.")
         return addr
 
     def validate_city(self, value):
@@ -78,7 +79,7 @@ class AddressSerializer(serializers.ModelSerializer):
         return state
 
     def validate_pincode(self, value):
-        pin = value.strip()
+        pin = re.sub(r'\D', '', str(value))
         if not re.match(r'^[1-9][0-9]{5}$', pin):
             raise serializers.ValidationError("Please enter a valid 6-digit Indian PIN code.")
         return pin
