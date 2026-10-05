@@ -7,7 +7,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Load environment variables from .env file if available
 try:
     from dotenv import load_dotenv
-    load_dotenv(BASE_DIR / '.env')
+    load_dotenv(BASE_DIR / '.env', override=True)
 except ImportError:
     pass
 
@@ -19,7 +19,9 @@ SECRET_KEY = os.environ.get(
 
 DEBUG = os.environ.get('DEBUG', 'True').lower() in ('true', '1', 'yes')
 
-ALLOWED_HOSTS = ['*']
+# Always allow 127.0.0.1, localhost, and all hosts for local and production flexibility
+raw_allowed_hosts = [h.strip() for h in os.environ.get('ALLOWED_HOSTS', '*').split(',') if h.strip()]
+ALLOWED_HOSTS = list(set(['127.0.0.1', 'localhost', 'testserver', '*'] + raw_allowed_hosts))
 
 FRONTEND_URL = os.environ.get('FRONTEND_URL', 'http://localhost:5173')
 
@@ -91,7 +93,7 @@ CHANNEL_LAYERS = {
     },
 }
 
-# Database Configuration (SQLite locally, PostgreSQL in production when DATABASE_URL is set)
+# Database Configuration (SQLite locally, PostgreSQL on Render when DATABASE_URL is present)
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
