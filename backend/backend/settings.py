@@ -19,9 +19,7 @@ SECRET_KEY = os.environ.get(
 
 DEBUG = os.environ.get('DEBUG', 'True').lower() in ('true', '1', 'yes')
 
-# Always allow 127.0.0.1, localhost, and all hosts for local and production flexibility
-raw_allowed_hosts = [h.strip() for h in os.environ.get('ALLOWED_HOSTS', '*').split(',') if h.strip()]
-ALLOWED_HOSTS = list(set(['127.0.0.1', 'localhost', 'testserver', '*'] + raw_allowed_hosts))
+ALLOWED_HOSTS = ['*']
 
 FRONTEND_URL = os.environ.get('FRONTEND_URL', 'http://localhost:5173')
 
