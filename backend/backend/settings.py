@@ -17,9 +17,12 @@ SECRET_KEY = os.environ.get(
     'django-insecure-ryox-key-change-in-production-893710'
 )
 
+# DEBUG is True by default for local development unless explicitly in production
 DEBUG = os.environ.get('DEBUG', 'True').lower() in ('true', '1', 'yes')
 
-ALLOWED_HOSTS = ['*']  # Allows localhost, 127.0.0.1, and all Render domains seamlessly
+# Always allow localhost and 127.0.0.1 along with any configured hosts
+raw_hosts = os.environ.get('ALLOWED_HOSTS', '*').split(',')
+ALLOWED_HOSTS = list(set(['127.0.0.1', 'localhost', 'testserver', '*'] + [h.strip() for h in raw_hosts if h.strip()]))
 
 FRONTEND_URL = os.environ.get('FRONTEND_URL', 'http://localhost:5173')
 
@@ -151,7 +154,7 @@ DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', f'RyOx <{EMAIL_HOST_US
 
 # Production Security Headers (Active when DEBUG is False)
 if not DEBUG:
-    SECURE_SSL_REDIRECT = os.environ.get('SECURE_SSL_REDIRECT', 'True').lower() == 'true'
+    SECURE_SSL_REDIRECT = os.environ.get('SECURE_SSL_REDIRECT', 'False').lower() == 'true'
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
     SECURE_BROWSER_XSS_FILTER = True
